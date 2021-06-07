@@ -1,30 +1,46 @@
 <script>
-	export let name;
+    import NotificationBox from "./components/notifications/NotificationBox.svelte";
+    import Notification from "./components/notifications/Notification.svelte";
+    import { notifications_list } from "./stores/notifications"
+    import NotificationAPI from "./utils/notification_api";
+    import { fly } from "svelte/transition";
+    import { flip } from "svelte/animate";
 </script>
 
-<main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
+<NotificationBox>
+    {#each $notifications_list as notif (notif.pk)}
+        <div transition:fly={{duration: 500, x: 200}} animate:flip={{duration: 500}}> 
+            <Notification {...notif} />
+        </div>
+    {/each}
+</NotificationBox>
+
+<div class="btn-group">
+    <button class="a" on:click={() => NotificationAPI.alert("alert message")}>alert</button>
+    <button class="w" on:click={() => NotificationAPI.warning("warning message")}>warning</button>
+    <button class="s" on:click={() => NotificationAPI.success("success message")}>success</button>
+</div>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
+    .btn-group {
+        width: 60%;
+        margin: auto;
+        margin-top: 300px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .btn-group > button{
+        padding: 8px 12px;
+        border-radius: 15px;
+        cursor: pointer;
+    }
+    .a {
+        background-color: rgb(255, 143, 131);
+    }
+    .w {
+        background-color: rgb(255, 213, 97);
+    }
+    .s {
+        background-color: rgb(81, 255, 139);
+    }
 </style>
